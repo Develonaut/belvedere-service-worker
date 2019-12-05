@@ -1,0 +1,17 @@
+# dependencies
+node_modules
+
+# production
+build
+
+#scripts
+scripts
+
+# misc
+.DS_Store
+.env
+npm-debug.log
+yarn-error.log
+yarn.lock
+.yarnclean
+.vscode
