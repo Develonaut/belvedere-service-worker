@@ -47,29 +47,6 @@ export default class ServiceWorker {
       notification,
       show: true
     });
-
-    let trackingParameters = await getTrackingInformation();
-
-    let imp = "{imp}";
-    let pushid = notification.data.pushID;
-    let uniqueId = notification.data.uniqueID;
-    let userclass = trackingParameters.userclass;
-    let userid = trackingParameters.userid;
-    let location = trackingParameters.location;
-    let publisher = trackingParameters.publisher;
-    let subid1 = trackingParameters.subid1;
-    let subid2 = trackingParameters.subid2;
-    let subid3 = trackingParameters.subid3;
-    let PTC = trackingParameters.PTC;
-
-    const serverURL = `https://api.pushible.com/api/getpayloadtwo?imp=${imp}&offerid=${pushid}&Affid=${uniqueId}&uc=${userclass}&location=${location}&publisher=${publisher}&subid1=${subid1}&subid2=${subid2}&subid3=${subid3}&subid9=${PTC}`;
-
-    const serverData = await fetch(serverURL, { mode: "no-cors" });
-    console.log("serverData = ", serverData);
-    const data = await serverData.text();
-    console.log("data = ", data);
-
-    return Promise.resolve({ notification: data, show: true });
   }
 
   onPushSubscriptionChange(event) {
@@ -91,21 +68,6 @@ export default class ServiceWorker {
         })
     );
   }
-}
-
-//Database Functionality
-//Adding
-async function addToDB(objectToBeAdded = {}, objectStoreName) {
-  console.log("Adding to DB");
-  db.then(db => {
-    const tx = db.transaction("users", "readwrite");
-    tx.objectStore("users").put({
-      id: objectStoreName,
-      data: objectToBeAdded
-    });
-    console.log("All done adding to DB");
-    return Promise.resolve(tx.complete);
-  });
 }
 
 //onNotificationClick
@@ -277,7 +239,6 @@ async function getTrackingInformation() {
 //Function used to send an impression.
 async function logImpression(event, impressionData = {}) {
   const trackingInformation = await getTrackingInformation();
-  //const legacyTrackingInformation = await getLegacyTrackingInformation();
 
   let user = trackingInformation.userid || "{userid}";
   let userclass = trackingInformation.userclass || "{userclass}";
